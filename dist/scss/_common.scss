@@ -1,0 +1,98 @@
+.bg-white{
+   background: var(--color-secondary);
+}
+.title-h1,
+.title-h2,
+.title-h3,
+.title-h4,
+.title-h5{
+   line-height: 122.22%;
+   color: var(--text-color);
+   text-align: center;
+}
+
+.title-h1{
+   font-size: 3rem;
+   line-height: 122.22%;
+}
+.title-h2{
+   font-size: 2.22rem;
+   line-height: 122.5%;
+}
+.title-h3{
+   font-size: 1.88rem;
+   line-height: 120.5%;
+}
+.title-h4{
+   font-size: 1.55rem;
+   line-height: 121.4%;
+}
+.title-h5{
+   font-size: 1.44rem;
+   line-height: 123%;
+   color: var(--color-secondary);
+   text-transform: uppercase;
+}
+
+.text{
+   font-size: 1rem;
+   line-height: 111.1%;
+   color: var(--color-secondary);
+}
+
+.focus,
+.focus-borderradius-50{
+   position: relative;
+
+}
+
+.focus:focus,
+.focus-borderradius-50:focus{
+   outline: none;
+}
+.focus:focus-visible::before,
+.focus-borderradius-50:focus-visible::before{
+   content: '';
+   z-index: -1;
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   background: var(--color-secondary);
+   width: 100%;
+   height: 100%;
+}
+.focus:focus::before{
+   
+   border-radius: 50px;
+   animation: focus 1.2s ease-out infinite;
+}
+.focus-borderradius-50:focus::before{
+   border-radius: 50%;
+   animation: focusborderradius50 1.2s ease-out infinite;
+}
+@keyframes focus{
+   0%{
+      
+      transform: translate(-50%, -50%) scaleX(1) scaleY(1);
+   }
+   100%{
+      filter: opacity(0);
+      transform: translate(-50%, -50%) scaleX(1.2) scaleY(1.5);
+   }
+}
+@keyframes focusborderradius50{
+   0%{
+      transform: translate(-50%, -50%) scale(1);
+   }
+   100%{
+      filter: opacity(0);
+      transform: translate(-50%, -50%) scale(1.4);
+   }
+}
+
+// .header,
+// .main,
+// .footer{
+//    z-index: 1;
+// }
