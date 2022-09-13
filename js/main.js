@@ -18,7 +18,7 @@ const myIdeasListWrapper = document.querySelector('.slider__wrapper');
 
 
 async function query(){
-   const link = 'http://www.boredapi.com/api/activity/';
+   const link = 'https://www.boredapi.com/api/activity/';
 
    for (let i = 0; i < 4; i++){
       let query       = await fetch(link, {
