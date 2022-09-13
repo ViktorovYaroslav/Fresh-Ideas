@@ -16,11 +16,14 @@ const chooseIdeasList    = document.querySelector('.choose-ideas__row');
 const myIdeasList        = document.querySelector('.slider__body');
 const myIdeasListWrapper = document.querySelector('.slider__wrapper');
 
+
 async function query(){
-   const link = 'https://www.boredapi.com/api/activity/';
+   const link = 'http://www.boredapi.com/api/activity/';
 
    for (let i = 0; i < 4; i++){
-      let query       = await fetch(link);
+      let query       = await fetch(link, {
+         method: 'GET',
+      });
       let queryToJson = await query.json();
 
       let template = `<div class="choose-ideas__column idea__column" data-text="${queryToJson.activity}" data-title="${queryToJson.type}">
@@ -51,7 +54,7 @@ async function query(){
       }
    }
 };
-query()
+query();
 // set listener for query function on button
 
 const queryBtn = document.querySelector('.choose-ideas__get-new-ideas');
