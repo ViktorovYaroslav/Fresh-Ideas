@@ -20,33 +20,33 @@ const myIdeasListWrapper = document.querySelector('.slider__wrapper');
 async function query(){
    const link = 'https://api.github.com/repos/drewthoennes/Bored-API/contents/db/activities.json';
 
+   let query = await fetch(link, {
+      method: 'GET',
+   });
+
+   let queryToJson                = await query.json();
+   let decodingData               = window.atob(queryToJson.content);
+   let decodingDataRemoveBrackets = decodingData.split('').map(function (e, i , arr){
+      if (e === '"')return e = '';
+
+      return e;
+   }).join('');
+
+   let activitiesArr = [];
+
+   let activitie = decodingDataRemoveBrackets.match(/{[^}]+}/g);
+
+   for (let i = 0; i < activitie.length; i++) {
+       let segments = activitie[i].split(',');
+       let item = {};
+       for (let j = 0; j < segments.length; j++) {
+           let pair = segments[j].replace(/{|}/, '').replace('"', '').split(':');
+           item[pair[0].trim()] = pair[1];
+       }
+       activitiesArr.push(item);    
+   }
+
    for (let i = 0; i < 4; i++){
-      let query = await fetch(link, {
-         method: 'GET',
-      });
-
-      let queryToJson                = await query.json();
-      let decodingData               = window.atob(queryToJson.content);
-      let decodingDataRemoveBrackets = decodingData.split('').map(function (e, i , arr){
-         if (e === '"')return e = '';
-
-         return e;
-      }).join('');
-
-      let activitiesArr = [];
-
-      let activitie = decodingDataRemoveBrackets.match(/{[^}]+}/g);
-
-      for (let i = 0; i < activitie.length; i++) {
-          let segments = activitie[i].split(',');
-          let item = {};
-          for (let j = 0; j < segments.length; j++) {
-              let pair = segments[j].replace(/{|}/, '').replace('"', '').split(':');
-              item[pair[0].trim()] = pair[1];
-          }
-          activitiesArr.push(item);    
-      }
-
       let currentActivitie = activitiesArr[Math.floor(Math.random() * activitiesArr.length)];
 
       let template = `<div class="choose-ideas__column idea__column" data-text="${currentActivitie['activity']}" data-title="${currentActivitie.type}">
