@@ -18,21 +18,44 @@ const myIdeasListWrapper = document.querySelector('.slider__wrapper');
 
 
 async function query(){
-   const link = 'https://www.boredapi.com/api/activity/';
+   const link = 'https://api.github.com/repos/drewthoennes/Bored-API/contents/db/activities.json';
 
    for (let i = 0; i < 4; i++){
-      let query       = await fetch(link, {
+      let query = await fetch(link, {
          method: 'GET',
       });
-      let queryToJson = await query.json();
 
-      let template = `<div class="choose-ideas__column idea__column" data-text="${queryToJson.activity}" data-title="${queryToJson.type}">
+      let queryToJson                = await query.json();
+      let decodingData               = window.atob(queryToJson.content);
+      let decodingDataRemoveBrackets = decodingData.split('').map(function (e, i , arr){
+         if (e === '"')return e = '';
+
+         return e;
+      }).join('');
+
+      let activitiesArr = [];
+
+      let activitie = decodingDataRemoveBrackets.match(/{[^}]+}/g);
+
+      for (let i = 0; i < activitie.length; i++) {
+          let segments = activitie[i].split(',');
+          let item = {};
+          for (let j = 0; j < segments.length; j++) {
+              let pair = segments[j].replace(/{|}/, '').replace('"', '').split(':');
+              item[pair[0].trim()] = pair[1];
+          }
+          activitiesArr.push(item);    
+      }
+
+      let currentActivitie = activitiesArr[Math.floor(Math.random() * activitiesArr.length)];
+
+      let template = `<div class="choose-ideas__column idea__column" data-text="${currentActivitie['activity']}" data-title="${currentActivitie.type}">
                         <article class="choose-ideas__item idea__item">
                            <header class="choose-ideas__header idea__header">
-                              <h5 class="choose-ideas__title idea__title title-h5">${queryToJson.type}</h5>
+                              <h5 class="choose-ideas__title idea__title title-h5">${currentActivitie.type}</h5>
                            </header>
                            <p class="choose-ideas__text idea__text text">
-                           ${queryToJson.activity}
+                           ${currentActivitie.activity}
                            </p>
                            <button class="choose-ideas__button idea__button text focus-borderradius-50" title="add in my list" type="button">
                               <svg class="idea__icon icon__plus" width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -142,9 +165,13 @@ let sliderCurrentActiveItem    = 0;
 let sliderBodyPosition         = 0;
 
 // try to imitate media queries and change amount of slider items
-if (document.body.clientWidth <= 1140) sliderNumberOfSlidesToShow = 2;
-if (document.body.clientWidth <= 780)  sliderNumberOfSlidesToShow = 1;
 
+function checkResize(){
+   if (document.body.clientWidth <= 1140) sliderNumberOfSlidesToShow = 2;
+   if (document.body.clientWidth <= 780)  sliderNumberOfSlidesToShow = 1;
+}
+
+window.addEventListener('resize', checkResize);
 
 const sliderColumns       = sliderBody.querySelectorAll('.idea__column');
 const sliderColumnWidth   = sliderColumns.length ? sliderColumns[0].clientWidth : '';
